@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import env from "../config/environment/index";
 import validateEmail from "../utils/validateEmail";
 import validatePassword from "../utils/validatePassword";
+import emailSender from "../utils/emailSender";
 
 const authenticationService = {
   async signUp(email, password, firstName, lastName) {
