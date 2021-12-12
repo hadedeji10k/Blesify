@@ -26,7 +26,7 @@ const authenticationController = {
         return errorResponseHandler(res, 400, "User already exists", false);
       }
     } catch (error) {
-      errorResponseHandler(res, 500, "Request Not Processed", false);
+      return errorResponseHandler(res, 500, "Request Not Processed", false);
     }
   },
 
@@ -50,142 +50,62 @@ const authenticationController = {
     }
   },
 
-  getUserById: async (req, res, next) => {
-    const userId = req.params.userId;
-
-    try {
-      const user = await authService.getUser(userId);
-
-      if (user) {
-        return successResponseHandler(
-          res,
-          200,
-          user,
-          "User fetched successfully",
-          true
-        );
-      } else {
-        return errorResponseHandler(res, 400, "User not found", false);
-      }
-    } catch (error) {
-      return errorResponseHandler(res, 500, "Request Not Processed", false);
-    }
-  },
-
-  getAllUsers: async (req, res, next) => {
+  getAllUsers: async (req, res) => {
     try {
       const users = await authService.getAllUsers();
 
       if (users) {
         return successResponseHandler(
           res,
-          200,
+          201,
           users,
           "Users fetched successfully",
           true
         );
       } else {
-        return errorResponseHandler(res, 400, "Users not found", false);
+        return errorResponseHandler(res, 400, "Users not fetched", false);
       }
     } catch (error) {
       return errorResponseHandler(res, 500, "Request Not Processed", false);
     }
   },
 
-  updateUser: async (req, res, next) => {
-    const userId = req.params.userId;
-    const { firstName, lastName, email, password } = req.body;
-
+  getUserById: async (req, res) => {
+    const userId = req.params.id;
     try {
-      const user = await authService.updateUser(
-        userId,
-        firstName,
-        lastName,
-        email,
-        password
-      );
+      const user = await authService.getUserById(userId);
 
       if (user) {
         return successResponseHandler(
           res,
-          200,
+          201,
           user,
-          "User updated successfully",
+          "User fetched successfully",
           true
         );
       } else {
-        return errorResponseHandler(res, 400, "User not found", false);
+        return errorResponseHandler(res, 400, "User not fetched", false);
       }
     } catch (error) {
       return errorResponseHandler(res, 500, "Request Not Processed", false);
     }
   },
 
-  deleteUser: async (req, res, next) => {
-    const userId = req.params.userId;
-
-    try {
-      const user = await authService.deleteUser(userId);
-
-      if (user) {
-        return successResponseHandler(
-          res,
-          200,
-          user,
-          "User deleted successfully",
-          true
-        );
-      } else {
-        return errorResponseHandler(res, 400, "User not found", false);
-      }
-    } catch (error) {
-      return errorResponseHandler(res, 500, "Request Not Processed", false);
-    }
-  },
-
-  updateUserRole: async (req, res, next) => {
-    const { userId, role } = req.body;
-
-    try {
-      const user = await authService.updateUserRole(userId, role);
-
-      if (user) {
-        return successResponseHandler(
-          res,
-          200,
-          user,
-          "User role updated successfully",
-          true
-        );
-      } else {
-        return errorResponseHandler(
-          res,
-          400,
-          "User not found or role not updated successfully",
-          false
-        );
-      }
-    } catch (error) {
-      return errorResponseHandler(res, 500, "Request Not Processed", false);
-    }
-  },
-
-  getUserByEmail: async (req, res, next) => {
+  getUserByEmail: async (req, res) => {
     const email = req.body.email || req.params.email;
-
     try {
       const user = await authService.getUserByEmail(email);
 
       if (user) {
         return successResponseHandler(
           res,
-          200,
+          201,
           user,
           "User fetched successfully",
           true
         );
       } else {
-        return errorResponseHandler(res, 400, "User not found", false);
+        return errorResponseHandler(res, 400, "User not fetched", false);
       }
     } catch (error) {
       return errorResponseHandler(res, 500, "Request Not Processed", false);
@@ -234,7 +154,7 @@ const authenticationController = {
           true
         );
       } else {
-        return errorResponseHandler(res, 400, "User not found", false);
+        return errorResponseHandler(res, 400, "User not found or User already verified", false);
       }
     } catch (error) {
       return errorResponseHandler(res, 500, "Request Not Processed", false);
@@ -282,7 +202,7 @@ const authenticationController = {
     }
   },
 
-  updatePassword: async (req, res, next) => {
+  updatePassword: async (req, res) => {
     const { userId, oldPassword, newPassword } = req.body;
 
     try {
@@ -304,7 +224,7 @@ const authenticationController = {
         return errorResponseHandler(
           res,
           400,
-          "User not found or password not updated successfully",
+          "User not found or Old password not correct or password not updated successfully",
           false
         );
       }
@@ -312,6 +232,75 @@ const authenticationController = {
       return errorResponseHandler(res, 500, "Request Not Processed", false);
     }
   },
+
+  updateUserRole: async (req, res) => {
+    const { userId, role } = req.body;
+
+    try {
+      const user = await authService.updateUserRole(userId, role);
+
+      if (user) {
+        return successResponseHandler(
+          res,
+          200,
+          user,
+          "User role updated successfully",
+          true
+        );
+      } else {
+        return errorResponseHandler(
+          res,
+          400,
+          "User not found or role not updated successfully",
+          false
+        );
+      }
+    } catch (error) {
+      return errorResponseHandler(res, 500, "Request Not Processed", false);
+    }
+  },
+
+  deleteUser: async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+      const user = await authService.deleteUser(userId);
+
+      if (user) {
+        return successResponseHandler(
+          res,
+          200,
+          user,
+          "User deleted successfully",
+          true
+        );
+      } else {
+        return errorResponseHandler(res, 400, "User not found", false);
+      }
+    } catch (error) {
+      return errorResponseHandler(res, 500, "Request Not Processed", false);
+    }
+  },
+
+  getAllUsersEmail: async (req, res) => {
+     try {
+      const usersEmail = await authService.getAllUsersEmail();
+
+      if (usersEmail) {
+        return successResponseHandler(
+          res,
+          200,
+          usersEmail,
+          "Users Emails fetched successfully",
+          true
+        );
+      } else {
+        return errorResponseHandler(res, 400, "Users Emails not fetched successfully", false);
+      }
+    } catch (error) {
+      return errorResponseHandler(res, 500, "Request Not Processed", false);
+    }
+  }
 };
 
 export default authenticationController;

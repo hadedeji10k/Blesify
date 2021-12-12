@@ -70,8 +70,13 @@ const authenticationService = {
     return { token, user };
   },
 
-  async getUserById(userId) {
-    const user = await User.findById(userId);
+  async getUserByEmail(email) {
+    const user = await User.findOne({ email });
+    return user;
+  },
+
+  async getUserById(id) {
+    const user = await User.findById(id);
     return user;
   },
 
@@ -80,59 +85,12 @@ const authenticationService = {
     return users;
   },
 
-  async updateUser(userId, firstName, lastName, email, password) {
-    const user = await User.findById(userId);
-
-    if (firstName) {
-      user.firstName = firstName;
-    }
-
-    if (lastName) {
-      user.lastName = lastName;
-    }
-
-    if (email) {
-      user.email = email;
-    }
-
-    if (password) {
-      let hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
-    }
-
-    await user.save();
-    return user;
-  },
-
-  async deleteUser(userId) {
-    const user = await User.findByIdAndDelete(userId);
-    return user;
-  },
-
-  async updateUserRole(userId, role) {
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return false;
-    }
-
-    user.role = role;
-
-    await user.save();
-
-    return user;
-  },
-
-  async getUserByEmail(email) {
-    const user = await User.findOne({ email });
-    return user;
-  },
-
   async verifyUser(email, verificationCode) {
     const user = await User.findOne({ email });
 
     if (user.verificationCode === verificationCode) {
       user.isVerified = true;
+      user.verificationCode = null;
       await user.save();
       return user;
     }
@@ -144,6 +102,10 @@ const authenticationService = {
     const user = await User.findOne({ email });
 
     if (!user) {
+      return false;
+    }
+
+    if (user.isVerified) {
       return false;
     }
 
@@ -256,6 +218,34 @@ const authenticationService = {
 
     return user;
   },
+
+  async updateUserRole(userId, role) {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return false;
+    }
+
+    user.role = role;
+
+    await user.save();
+
+    return user;
+  },
+
+  async deleteUser(userId) {
+    const user = await User.findByIdAndDelete(userId);
+    return user;
+  },
+
+  async getAllUsersEmail () {
+    const users = await User.find({})
+    const usersEmail = users.map((item) => {
+      return item.email
+    })
+
+    return usersEmail;
+  }
 };
 
 export default authenticationService;

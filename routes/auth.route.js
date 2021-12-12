@@ -10,6 +10,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/users", authenticationController.getAllUsers);
+router.get("/users/all-users-email", authenticationController.getAllUsersEmail);
 router.get("/users/:id", authenticationController.getUserById);
 router.get("/users/email/:email", authenticationController.getUserByEmail);
 router.post("/sign-up", authenticationController.signUp);
