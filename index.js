@@ -45,7 +45,6 @@ app.use(
 )
 
 app.use('/api/v1/auth', authRoutes)
-// app.use('/api/v1', serviceRoute)
 
 const startServer = async () => {
     try {
@@ -55,7 +54,7 @@ const startServer = async () => {
             console.log(`Database not connected`)
         });
         app.listen(env.PORT || 3001, () => {
-            console.log(`Server running on port ${process.env.PORT}`);
+            console.log(`Server running on port ${env.PORT}`);
         })
     } catch (err) {
         console.log(err);
