@@ -174,7 +174,7 @@ const authenticationService = {
     <p>
       Copy the code below to complete your registration.
     </p>
-    <p>
+    <p> 
       <b>${verificationCode}</b>
     </p>
       <br>
