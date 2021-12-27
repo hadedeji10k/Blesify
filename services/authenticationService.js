@@ -10,6 +10,7 @@ import emailSender from "../utils/emailSender";
 const authenticationService = {
   async signUp(email, password, firstName, lastName) {
     const isUserTaken = await validateEmail(email);
+    
     if (isUserTaken) {
       return false;
     }
