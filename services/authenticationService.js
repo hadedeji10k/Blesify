@@ -88,11 +88,25 @@ const authenticationService = {
   async verifyUser(email, verificationCode) {
     const user = await User.findOne({ email });
 
-    if (user.verificationCode === verificationCode) {
+    if (user.verificationCode === parseInt(verificationCode)) {
       user.isVerified = true;
       user.verificationCode = null;
       await user.save();
-      return user;
+
+    let token = jwt.sign(
+      {
+        userId: user._id,
+        role: user.role,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        name: user.name,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    return { token, user };
     }
 
     return false;
