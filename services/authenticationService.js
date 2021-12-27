@@ -326,4 +326,5 @@ const authenticationService = {
     return usersEmail;
   }
 };
+
 export default authenticationService; 
