@@ -179,7 +179,7 @@ const authenticationService = {
     </p>
       <br>
 
-    <p>
+    <p> 
     Kindly ignore this email if you did not request for a new verification code.
     </p>
     <p>Thanks</p>
