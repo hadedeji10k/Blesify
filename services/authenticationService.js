@@ -43,7 +43,29 @@ const authenticationService = {
       { expiresIn: "1h" }
     );
 
-    return { token, user: newUser };
+    const html = `
+    <h1>Welcome to Blesify Event Application</h1>
+
+    <p>
+      Copy the code below to complete your registration.
+    </p>
+    <p>
+      <b>${verificationCode}</b>
+    </p>
+      <br>
+    <p>
+      Or Please click on the link below to verify your email address and complete your registration.
+    </p>
+    <a href="${process.env.CLIENT_URL}/verify-email?token=${token}">Verify Email</a>
+    `;
+
+    const emailSent = await emailSender(email, "Verify User Account - Blesify", html);
+
+    if(emailSent) {
+      return { token, user: newUser };
+    } else {
+      return false;
+    }
   },
 
   async signIn(email, password) {
@@ -128,6 +150,36 @@ const authenticationService = {
     user.verificationCode = verificationCode;
 
     await user.save();
+
+    const html = `
+    <h1>Blesify Event Application</h1>
+    <p>Hi ${user.firstName},</p>
+
+    <p>
+      You requested for a new verification code.
+    </p>
+      <br>
+
+    <p>
+      Copy the code below to complete your registration.
+    </p>
+    <p>
+      <b>${verificationCode}</b>
+    </p>
+      <br>
+
+    <p>
+    Kindly ignore this email if you did not request for a new verification code.
+    </p>
+    `;
+
+    const emailSent = await emailSender(email, "Verify User Account - Blesify", html);
+
+    if(emailSent) {
+      return { token, user: newUser };
+    } else {
+      return false;
+    }
 
     return user;
   },
