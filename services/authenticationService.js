@@ -169,7 +169,7 @@ const authenticationService = {
     <p>
       You requested for a new verification code.
     </p>
-      <br>
+    <br>
 
     <p>
       Copy the code below to complete your registration.
