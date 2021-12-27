@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user";
-// const User = require("../models/user");
 import jwt from "jsonwebtoken";
 import env from "../config/environment/index";
 import validateEmail from "../utils/validateEmail";
