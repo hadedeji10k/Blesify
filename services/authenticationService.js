@@ -149,7 +149,18 @@ const authenticationService = {
 
     user.verificationCode = verificationCode;
 
-    await user.save();
+    let token = jwt.sign(
+      {
+        userId: user._id,
+        role: user.role,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        name: user.name,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
     const html = `
     <h1>Blesify Event Application</h1>
@@ -171,17 +182,19 @@ const authenticationService = {
     <p>
     Kindly ignore this email if you did not request for a new verification code.
     </p>
+    <p>Thanks</p>
+    <br><br>
+    <p>The ${env.CLIENT_NAME} Team</p>
     `;
 
     const emailSent = await emailSender(email, "Verify User Account - Blesify", html);
 
     if(emailSent) {
+    await user.save();
       return { token, user: newUser };
     } else {
       return false;
     }
-
-    return user;
   },
 
   async forgotPassword(email) {
