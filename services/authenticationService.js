@@ -270,7 +270,20 @@ const authenticationService = {
 
       await user.save();
 
-      return user;
+      let token = jwt.sign(
+        {
+          userId: user._id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          name: user.name,
+          verificationCode: user.verificationCode,
+        },
+        env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
+
+      return { token, user };
     } catch (error) {
       return false;
     }
