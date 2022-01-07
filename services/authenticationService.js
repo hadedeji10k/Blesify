@@ -61,11 +61,13 @@ const authenticationService = {
 
     const emailSent = await emailSender(email, "Verify User Account - Blesify", html);
 
-    if(emailSent) {
-      return { token, user: newUser };
-    } else {
-      return false;
-    }
+    // if(emailSent) {
+    //   return { token, user: newUser };
+    // } else {
+    //   return false;
+    // }
+
+    return { token, user: newUser };
   },
 
   async signIn(email, password) {
